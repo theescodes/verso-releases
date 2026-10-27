@@ -1,0 +1,59 @@
+name: Bug report
+description: Something in Verso doesn't work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. This issue is public, so **please don't paste page contents,
+        cookies or anything personal**: the details below are enough.
+
+        If data could leave your Mac, or a page could break out of its sandbox, report it
+        privately instead (see [SECURITY.md](https://github.com/theescodes/verso-releases/blob/main/SECURITY.md)).
+  - type: input
+    id: version
+    attributes:
+      label: Verso version
+      description: Verso → About Verso.
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and Mac
+      placeholder: macOS 26.1 on a MacBook Air M3
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where did it happen?
+      options:
+        - Sidebar or tabs
+        - Spaces
+        - Command bar or address field
+        - Page content
+        - Downloads
+        - Settings
+        - Keyboard shortcuts
+        - Somewhere else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: >-
+        Help → Copy Diagnostics, then paste here. It holds Verso's version and build, the macOS
+        version and build, the Mac's model identifier, whether Verso is the default browser, the
+        search engine (or "custom") and the number of Spaces, private Spaces and tabs in each
+        state; no URLs, titles, names or page data.
+      render: text

@@ -1,0 +1,49 @@
+name: Site breakage
+description: A website works in Safari but not in Verso.
+labels: [compatibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Verso uses the same WebKit as Safari, so a page that works in Safari and not here is
+        usually something the browser chrome does: content blocking, a missing permission prompt,
+        a dialog, a popup, or a shortcut the page never receives.
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      description: A public URL that shows the problem. Leave out anything behind a login.
+    validations:
+      required: true
+  - type: dropdown
+    id: safari
+    attributes:
+      label: Does the page work in Safari on the same Mac?
+      options:
+        - 'Yes'
+        - 'No'
+        - Not checked
+    validations:
+      required: true
+  - type: dropdown
+    id: blocking
+    attributes:
+      label: Does it work with content blocking off for this site?
+      options:
+        - 'Yes'
+        - 'No'
+        - Not checked
+  - type: textarea
+    id: what
+    attributes:
+      label: What breaks?
+      description: What you see, what you expected, and the steps to get there.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Verso and macOS version
+      placeholder: Verso 0.1.0, macOS 26.1
+    validations:
+      required: true

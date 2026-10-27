@@ -1,0 +1,21 @@
+name: Idea
+description: Suggest an improvement or something new.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do?
+      description: The situation and what gets in the way today.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could Verso help?
+      description: Your idea, if you have one. Rough is fine.
+  - type: markdown
+    attributes:
+      value: |
+        Verso stays deliberately small: macOS only, WebKit only, no AI features, no accounts, no
+        telemetry. Ideas that need any of those are still welcome to discuss, but may not fit.

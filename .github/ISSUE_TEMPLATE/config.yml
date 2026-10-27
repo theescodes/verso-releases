@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Data leaving your Mac, a sandbox escape, or a release that doesn't match its checksums
+    url: https://github.com/theescodes/verso-releases/security/advisories/new
+    about: Report it privately (see SECURITY.md). Please don't open a public issue for these.
