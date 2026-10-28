@@ -7,6 +7,14 @@ without the prior written permission of the copyright holder.
 The signed builds published at https://github.com/theescodes/verso-releases may be installed and
 used free of charge. That permission covers the unmodified builds only.
 
+The builds are provided "as is", without warranty of any kind, express or implied, including but
+not limited to the warranties of merchantability, fitness for a particular purpose and
+non-infringement. To the extent the applicable law allows, the copyright holder is not liable for
+any claim, damages or other liability, whether in contract, tort or otherwise, arising from the
+software or its use. Where the law does not allow a warranty or liability to be excluded (such as
+for intent or gross negligence, or for injury to life, body or health), this paragraph limits it
+only as far as the law allows.
+
 Earlier versions of this source code were published under the GNU General Public License,
 version 3 or later. Copies obtained under that license keep it; this notice applies to every
 version from 2026-10-23 onward.
