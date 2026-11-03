@@ -34,11 +34,16 @@ data in its container, which macOS leaves in place. To remove all of it:
 
    The first command takes back the camera, microphone and Full Disk Access permissions you gave
    Verso, and must run while the app is still in Applications; the second removes the app and
-   its folders. macOS may ask whether Terminal may access data from other apps: allow it.
+   its folders.
+4. macOS protects the container folder itself: unless Terminal has Full Disk Access, the second
+   command empties it and reports "Operation not permitted" for the folder and the one file left
+   in it, macOS's own record of the container. Run `open ~/Library/Containers` and drag the
+   folder `codes.thees.verso` to the Trash; Finder may name it Verso.
 
 Without Terminal: turn Verso off in System Settings → Privacy & Security under Camera, Microphone
 and Full Disk Access, drag Verso from Applications to the Trash, then choose Go → Go to Folder…
-in Finder, enter `~/Library/Containers` and drag the folder named Verso to the Trash as well.
+in Finder, enter `~/Library/Containers` and drag the folder named `codes.thees.verso` (or Verso)
+to the Trash as well.
 
 Files you downloaded stay where they are, and crash reports macOS wrote for Verso stay in its
 crash reporter until macOS deletes them.
