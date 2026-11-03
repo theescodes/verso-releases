@@ -28,17 +28,17 @@ data in its container, which macOS leaves in place. To remove all of it:
    ```sh
    tccutil reset All codes.thees.verso
    rm -rf /Applications/Verso.app \
-     ~/Library/Containers/codes.thees.verso \
+     ~/Library/Containers/codes.thees.verso/Data \
      ~/Library/Application\ Scripts/codes.thees.verso
+   open -R ~/Library/Containers/codes.thees.verso
    ```
 
    The first command takes back the camera, microphone and Full Disk Access permissions you gave
    Verso, and must run while the app is still in Applications; the second removes the app and
-   its folders.
-4. macOS protects the container folder itself: unless Terminal has Full Disk Access, the second
-   command empties it and reports "Operation not permitted" for the folder and the one file left
-   in it, macOS's own record of the container. Run `open ~/Library/Containers` and drag the
-   folder `codes.thees.verso` to the Trash; Finder may name it Verso.
+   everything Verso kept.
+4. macOS does not let Terminal remove the container folder itself, which now holds only macOS's
+   own record of it, so the last command shows it in Finder: with `codes.thees.verso` selected
+   there, press ⌘⌫.
 
 Without Terminal: turn Verso off in System Settings → Privacy & Security under Camera, Microphone
 and Full Disk Access, drag Verso from Applications to the Trash, then choose Go → Go to Folder…

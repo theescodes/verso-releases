@@ -91,6 +91,11 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
   the browser's ids for the imported items, so a second import adds nothing twice. To offer the
   import on the first launch, Verso asks Launch Services which of the browsers are installed; it
   does not look into their folders until you start the import.
+- A file another app hands to Verso (Open With, a drop on the Dock icon, File → Open File…) is
+  kept in the same SQLite file as a read-only bookmark macOS issues for that file, so its tab
+  shows it again after a relaunch; it grants access to that file and nothing else, and is
+  forgotten once no saved tab or bookmark shows the file. A file opened in a private Space is
+  not kept.
 - Crash logs stay in the system's crash reporter; the app never uploads them.
 - Everything Verso keeps lives in its sandbox container, `~/Library/Containers/codes.thees.verso`,
   except the files you download. macOS leaves the container in place when the app goes to the
