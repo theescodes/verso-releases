@@ -43,6 +43,9 @@ in Finder, enter `~/Library/Containers` and drag the folder named Verso to the T
 Files you downloaded stay where they are, and crash reports macOS wrote for Verso stay in its
 crash reporter until macOS deletes them.
 
+The website has the same steps in seven languages:
+[versobrowser.com/uninstall](https://www.versobrowser.com/uninstall).
+
 ## Speed
 
 Measured from outside with the same yardstick for every browser, on an M4 Pro with 24 GB running
