@@ -14,6 +14,35 @@ from Applications and eject the disk image. Verso needs macOS 26 or later on App
 updates itself through Sparkle, which needs it to run from Applications rather than from the
 disk image.
 
+## Uninstall
+
+Dragging Verso to the Trash removes the app but not what it keeps. Like every sandboxed app,
+Verso keeps its tabs, history, bookmarks, settings, extensions and every Space's cookies and site
+data in its container, which macOS leaves in place. To remove all of it:
+
+1. If Verso is the default browser, choose another one in System Settings → Desktop & Dock →
+   Default web browser.
+2. Quit Verso.
+3. In Terminal, run:
+
+   ```sh
+   tccutil reset All codes.thees.verso
+   rm -rf /Applications/Verso.app \
+     ~/Library/Containers/codes.thees.verso \
+     ~/Library/Application\ Scripts/codes.thees.verso
+   ```
+
+   The first command takes back the camera, microphone and Full Disk Access permissions you gave
+   Verso, and must run while the app is still in Applications; the second removes the app and
+   its folders. macOS may ask whether Terminal may access data from other apps: allow it.
+
+Without Terminal: turn Verso off in System Settings → Privacy & Security under Camera, Microphone
+and Full Disk Access, drag Verso from Applications to the Trash, then choose Go → Go to Folder…
+in Finder, enter `~/Library/Containers` and drag the folder named Verso to the Trash as well.
+
+Files you downloaded stay where they are, and crash reports macOS wrote for Verso stay in its
+crash reporter until macOS deletes them.
+
 ## Speed
 
 Measured from outside with the same yardstick for every browser, on an M4 Pro with 24 GB running
