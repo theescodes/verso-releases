@@ -10,7 +10,7 @@ you open make their own requests, as in any browser, inside WebKit's sandboxed p
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Page loads                 | You open a page.                                                                                                                                                                                                                                                                                                                    | The site.                                                                                                                                               | The request any browser makes; cookies of that Space's profile only.                                                                                                                                                                                                                                                                                                                                              |
 | A proxy of your own | You gave a Space a proxy in its settings (the Proxy row, shown while Settings → Developer is on), and only while that switch is on: off, the Space's pages go direct again, and the proxy waits. Nothing else in Verso takes it. | The proxy you named, host and port, by HTTP CONNECT or SOCKSv5. | Every request the pages of that Space make, as the proxy protocol carries it: the host and port of each destination, and for a plain HTTP page the page itself. A proxy that cannot be reached fails the load; Verso never falls back to a direct connection. Favicons, the update check and a store install belong to no Space and keep the routes their rows describe. |
-| Favicons                   | A page names an icon, or none, and `/favicon.ico` is tried.                                                                                                                                                                                                                                                                         | The host the page named.                                                                                                                                | One request for the icon, without cookies, in a session that keeps nothing on disk.                                                                                                                                                                                                                                                                                                                               |
+| Favicons                   | A page names an icon, or none, and `/favicon.ico` is tried. An SVG icon is passed over for a raster one or `/favicon.ico`.                                                                                                                                                                                                          | The host the page named. A host on this Mac only for a page on a local host; never another machine of your local network, so macOS never asks you for Verso's Local Network access and Verso declares none. | One request for the icon, without cookies, in a session that keeps nothing on disk, with the User-Agent the pages send (this Mac's Safari, nothing about Verso), `Accept: image/*` and the languages macOS adds (`Accept-Language`). At most 256 KB after decoding and 15 seconds, or the transfer is cancelled; what is kept is a PNG of at most 64 pixels made from it. |
 | Searches                   | You press Enter on text that is not an address.                                                                                                                                                                                                                                                                                     | The search engine you chose.                                                                                                                            | The text. Nothing is sent while you type: there are no search suggestions.                                                                                                                                                                                                                                                                                                                                        |
 | Update check               | You choose Verso → Check for Updates… or Settings → Updates → Check Now, or once a day after you said yes to automatic checks: Verso asks on its second launch, and Settings → Updates changes it (Off, Notify, Install). A build without the update key, as every build before the first release, has no updater and never checks. | GitHub: `github.com`, which forwards to its host for release files.                                                                                     | One request for the release feed, with Verso's and Sparkle's names and versions in the User-Agent. No system profile, and no cookie from an earlier check: the app's cookie store, which nothing else in Verso uses, is emptied before each one. An update is downloaded from the same place: when you choose to install it, or, with Install, as soon as a daily check finds it, to be applied when Verso quits. |
 | Fraudulent website warning | You open a page: WebKit checks its address first, as Safari does. On, as in Safari; Verso has no switch for it yet.                                                                                                                                                                                                                 | Google Safe Browsing and Apple, through macOS's Safe Browsing service (Tencent Safe Browsing too when the Mac's region is China mainland or Hong Kong). | When the check needs it, information calculated from the address, never the address itself; Google (or Tencent) may log your IP address. This is Apple's description of the same check in Safari.                                                                                                                                                                                                                 |
@@ -37,6 +37,10 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
 - Spaces (a proxy you gave one included), open tabs, their back/forward state, bookmarks,
   history, the icons of the sites you visit and the downloads list live in one SQLite file in the
   app's sandbox container under Application Support.
+- A tab's back/forward state is WebKit's, and it holds what a form sent for a page that came
+  from one, a password included. So a tab whose history holds such a page is saved with its
+  address alone: what the form sent stays in memory while Verso runs and is never written to the
+  file, and after a relaunch the tab opens on that address without its back/forward list.
 - History → Clear History removes every page and visit, in every Space, with what search by
   meaning kept for them and the icons that no open tab or bookmark shows, and overwrites them in
   the file: its search index, the space they freed and its write-ahead log hold none of it
@@ -44,6 +48,13 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
   History window takes it out of the list and the search at once; the search index only marks
   its words deleted, and SQLite drops them from the file when it next merges that part of the
   index, or with the next Clear History.
+- Two more files can sit beside that SQLite file. When an update changes how the file is laid
+  out, Verso first keeps a copy of it as it was, `verso.sqlite.before-<change>`, so a change that
+  goes wrong loses nothing: it holds everything the file held then, history included, and is
+  deleted after five launches of the new version, or as soon as you clear the history, delete a
+  page in the History window or turn off search by meaning. A file SQLite finds damaged is put
+  aside whole as `verso.sqlite.corrupt-<time>`, for a recovery; Verso tells you where it is and
+  never deletes it.
 - Settings (the search engine, the appearance, the downloads folder and how downloads are
   saved, whether content blocking is on) live in the same SQLite file, and so do the sites you
   turned content blocking off for (View → Turn Off Content Blocking for This Site), one host
@@ -53,6 +64,11 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
   that folder and nothing else.
 - Downloads go to your Downloads folder, or the folder you chose in Settings, under the name the
   site suggests (numbered when it is taken), unless you ask to choose the place for each one.
+  Until a file is whole its bytes wait in a temporary folder on the same disk, which Verso empties
+  once the download cannot continue: you cancel, remove or clear it, it fails with no way to
+  resume, its Space is deleted or Verso quits, and after a crash at the next launch. A private
+  Space's download is never saved, so after a crash its bytes stay in that temporary folder. A
+  file you chose to replace stays until the new one takes its place.
   The downloads list keeps each file's name, address, size and place on disk for a month (a
   day, a week or until you clear it, as set in Settings); a private Space's downloads are
   listed only while the Space
@@ -65,10 +81,11 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
   A private Space keeps its cookies, site data and cache in memory only, records no history, and
   never saves its tabs, its bookmarks or their icons: all of it is gone when Verso quits or the
   Space is deleted, and after a relaunch the Space comes back empty. Only the Space itself is
-  kept, with its profile's entry: its name, colour and icon, and that it is private. On macOS 27
-  its pages also send Global Privacy Control (`Sec-GPC: 1`), asking each site not to sell or share
-  what it learns; the other Spaces do not. "Clear
-  Website Data" on a Space removes everything its sites stored; deleting a Space removes its
+  kept, with its profile's entry: its name, colour and icon, a proxy you gave it, the requests you
+  block in it (the Develop palette's Requests), and that it is private; not the names of its tab
+  groups. On macOS 27 its pages also send Global Privacy Control (`Sec-GPC: 1`), asking each site
+  not to sell or share what it learns; the other Spaces do not. "Clear Website Data" on a Space
+  removes everything its sites stored; deleting a Space removes its
   profile's store and forgets its recently closed tabs, so none of them can reopen in another
   Space.
 - Web extensions you install are kept as Verso's own copy of the folder, ZIP or CRX file you
@@ -80,7 +97,9 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
   extension removes that storage with its files and its row. The website data of an
   extension's own pages and worker (their cookies, local storage and IndexedDB) is kept in
   memory and gone when Verso quits. An extension sees a private
-  Space's pages, tabs and addresses only if you ticked "Allow in private Spaces" for it.
+  Space's pages, tabs and addresses only if you ticked "Allow in private Spaces" for it. A page
+  an extension opens in a private window (`windows.create` with `incognito`) opens in a private
+  Space, never with an ordinary Space's cookies or in its history.
 - Content blocking uses EasyList and EasyPrivacy, which ship inside the app, converted when
   Verso is built; a new snapshot comes with a Verso update. Verso compiles them once per version
   into WebKit's rule-list store in its own container, and WebKit applies them inside its
@@ -89,6 +108,9 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
 - A site that wants your camera, your microphone or your location, or a link that wants to open
   another app, is shown to you first, with the name of the site that asks. A no never reaches the
   system or the other app, and the page cannot ask again until it navigates.
+- A download that a page starts on its own, with no click of yours (a script, a hidden frame from
+  another site), saves nothing until you allow that site in the same kind of question; the answer
+  holds until the page navigates. The downloads you start yourself are not asked about.
 - Your location goes to a site only on macOS 27, after you said yes to that site in Verso and to
   Verso in macOS's own Location Services prompt: macOS works it out, as it does for any app, and
   WebKit hands it to the page you allowed, nowhere else. Verso keeps none of it. On macOS 26
@@ -118,8 +140,13 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
   extensions stored are never written. Its other format, Bookmarks for Other Browsers, writes
   the bookmarks and pinned tabs alone, as the `bookmarks.html` every browser reads. File →
   Import Spaces and Bookmarks… reads such a file, or a `bookmarks.html` from any browser, that
-  you choose: the settings in a Verso file replace yours, the rest is added and kept as above,
-  with the file's ids, so a second import adds nothing twice. Extensions are not installed by an
+  you choose and that is no larger than 100 MB: the settings in a Verso file replace yours, the
+  rest is added and kept as above, with the file's ids, so a second import adds nothing twice.
+  Before a file sends your searches elsewhere, turns content blocking off (everywhere or for
+  sites), turns the Developer switch on, or brings a Space with a proxy, Verso asks, naming each
+  change; Cancel keeps yours for these and imports the rest. A search engine comes over only as
+  Settings would save one (https, named after its host), tabs and bookmarks only with web or
+  file addresses, and history only with web addresses. Extensions are not installed by an
   import; its summary can open their Chrome Web Store pages, where installing is your step.
   Neither command sends anything anywhere; the file is yours to keep or move to another Mac.
 - A file another app hands to Verso (Open With, a drop on the Dock icon, File → Open File…) is
@@ -135,9 +162,12 @@ Verso's Developer ID and notarized by Apple. `docs/release.md` describes how bot
   host, its text for a summary, a question or a comparison you asked for, the words you typed into
   the command bar with the open tabs' titles and hosts, or the text you selected for an explanation,
   go to that model and nowhere else, and nothing of it is kept beyond the tidied title and the
-  group's name saved with its tab. They work only while the Mac's own Apple Intelligence switch is
-  on, and each has a switch of its own, but for Tidy Tabs, the comparison and the command bar's
-  sentences, which run only when you ask. "Search history by meaning", in the same pane, lets the
+  group's name saved with its tab. While Verso runs, it also remembers the model's tidied titles
+  by title and host, so a reload asks nothing twice: at most 300, never a private Space's, and
+  forgotten with Clear History, when you turn tidied titles or the pane's main switch off, and at
+  the quit. The helpers work only while the Mac's own Apple Intelligence switch is on, and each
+  has a switch of its own, but for Tidy Tabs, the comparison and the command bar's sentences,
+  which run only when you ask. "Search history by meaning", in the same pane, lets the
   command bar find a page by what its title meant: it uses the sentence model macOS keeps for the
   languages your Mac is set up with (the one behind the system's own text features), not Apple
   Intelligence, so it works whether that is on or off; Verso downloads no model and sends

@@ -19,7 +19,7 @@ names its version.
 
 ## GRDB.swift
 
-The SQLite layer of the `Persistence` module, version 7.11.1.
+The SQLite layer of the `Persistence` module, version 7.12.0.
 
 - Source: https://github.com/groue/GRDB.swift
 
@@ -35,7 +35,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## Sparkle
 
-The software updates (the `Updates` module), version 2.10.0, with the external code its licence
+The software updates (the `Updates` module), version 2.10.1, with the external code its licence
 names.
 
 - Source: https://github.com/sparkle-project/Sparkle

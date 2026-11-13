@@ -60,7 +60,6 @@ window is on screen (Verso restoring a session with the ten tabs, Safari opening
 Arc restoring the maintainer's sidebar); memory is the footprint of all the browser's processes,
 idle for 30 s after the same ten pages (Wikipedia, MDN, GitHub, apple.com, Hacker News, The Verge,
 BBC News, Reddit, YouTube, Amazon) were opened one by one; CPU is their share over the next 10 s.
-The row is measured again for each release.
 
 | Verso 0.2.0 against            | Verso  | Safari 27.2 | Arc 1.170 (Chromium 156) |
 | ------------------------------ | ------ | ----------- | ------------------------ |
