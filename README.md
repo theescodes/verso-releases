@@ -1,7 +1,8 @@
 # Verso
 
 A macOS browser on WebKit: vertical tabs in a sidebar, Spaces with their own cookie jars, a
-command bar, keyboard first. No AI features, no telemetry.
+command bar, keyboard first. No cloud AI (its few helpers run through Apple Intelligence and the
+language models on your Mac), no telemetry.
 
 This repository holds the signed and notarized builds, the update feed Verso checks, and the
 place to report bugs and security issues. The source code is private.

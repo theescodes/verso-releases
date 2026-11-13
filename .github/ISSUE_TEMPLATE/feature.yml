@@ -17,5 +17,5 @@ body:
   - type: markdown
     attributes:
       value: |
-        Verso stays deliberately small: macOS only, WebKit only, no AI features, no accounts, no
+        Verso stays deliberately small: macOS only, WebKit only, no cloud AI (its helpers run on the Mac), no accounts, no
         telemetry. Ideas that need any of those are still welcome to discuss, but may not fit.
