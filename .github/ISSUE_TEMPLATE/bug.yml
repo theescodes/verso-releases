@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in Verso doesn't work as it should.
+description: Something in Verso doesn't work as it should, or Verso crashed.
 labels: [bug]
 body:
   - type: markdown
@@ -8,8 +8,14 @@ body:
         Thanks for taking the time. This issue is public, so **please don't paste page contents,
         cookies or anything personal**: the details below are enough.
 
+        Verso sends no analytics and no crash reports, so what you write here is all there is to
+        go on. Coming from Help → Report a Problem… in Verso, or from Report… in the note Verso
+        shows after it quit unexpectedly, the two version fields are already filled in.
+
         If data could leave your Mac, or a page could break out of its sandbox, report it
         privately instead (see [SECURITY.md](https://github.com/theescodes/verso-releases/blob/main/SECURITY.md)).
+  # Help → Report a Problem… fills `version` and `macos` through the address it opens, by these
+  # two ids: renaming one here empties its field there.
   - type: input
     id: version
     attributes:
@@ -22,6 +28,7 @@ body:
     id: macos
     attributes:
       label: macOS version and Mac
+      description: Apple menu → About This Mac. Which Mac matters when something is slow.
       placeholder: macOS 26.1 on a MacBook Air M3
     validations:
       required: true
@@ -33,10 +40,15 @@ body:
         - Sidebar or tabs
         - Spaces
         - Command bar or address field
+        - Split View
         - Page content
         - Downloads
+        - Extensions
+        - Summaries, questions and the other helpers
+        - Importing from another browser
         - Settings
         - Keyboard shortcuts
+        - Installing or updating
         - Somewhere else
     validations:
       required: true
@@ -44,9 +56,32 @@ body:
     id: what
     attributes:
       label: What happened?
-      description: What you did, what you expected, and what happened instead.
+      description: What you expected, and what happened instead. A screenshot helps.
     validations:
       required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to see it again
+      description: >-
+        What you did, one step per line, from a new window if you can. A public page that shows
+        it is welcome; leave out anything behind a login.
+      placeholder: |
+        1. Open …
+        2. Press …
+        3. …
+  - type: textarea
+    id: crash
+    attributes:
+      label: If Verso crashed
+      description: >-
+        macOS keeps a report of every crash on your Mac, and Verso never sends it anywhere. Open
+        the Console app (in Applications → Utilities), choose Crash Reports in its sidebar and
+        find the newest report named Verso; a page that crashed inside Verso, which shows the
+        pane with Reload, is named com.apple.WebKit.WebContent. Right-click it, choose Reveal in
+        Finder, compress the file (right-click → Compress: GitHub may refuse an .ips file as it
+        is) and drag the .zip into this field. Look the report over first: it names your Mac's
+        model and can show your account's short name in file paths.
   - type: textarea
     id: diagnostics
     attributes:

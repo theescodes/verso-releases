@@ -72,9 +72,11 @@ BBC News, Reddit, YouTube, Amazon) were opened one by one; CPU is their share ov
 
 - **A site that breaks:** a page that works in Safari and not in Verso, through the site
   breakage form.
-- **A bug:** through the bug form, with what Help → Copy Diagnostics puts on the clipboard
+- **A bug or a crash:** through the bug form, which Help → Report a Problem… opens in Verso with
+  the two version fields filled in, and with what Help → Copy Diagnostics puts on the clipboard
   ([PRIVACY.md](PRIVACY.md) lists every field: nothing personal, and nothing is sent until you
-  paste it).
+  paste it). Verso uploads no crash reports: the form says where macOS keeps one. After it quit
+  unexpectedly, Verso says so once at the next launch and offers the same form.
 - **An idea:** through the idea form.
 - **A security issue** (data leaving the Mac, a page breaking out of its sandbox): privately, as
   [SECURITY.md](SECURITY.md) says.
